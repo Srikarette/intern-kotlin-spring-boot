@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 @RestControllerAdvice
 class ExceptionAdvice {
     @ExceptionHandler(BindException::class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.OK)
     fun handleBindException(e: BindException): TemplateResponse<Any> {
         return TemplateResponse(
             VALIDATION_ERROR.getCode(),
@@ -28,7 +28,7 @@ class ExceptionAdvice {
     }
 
     @ExceptionHandler(BusinessException::class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.OK)
     fun handleCustomException(e: BusinessException): TemplateResponse<Any> {
         return TemplateResponse(
             e.errorCode,

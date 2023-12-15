@@ -1,12 +1,16 @@
 package com.demo.internkotlinspringbootdemo.controller
 
-import com.demo.internkotlinspringbootdemo.constants.SuccessCode
+import com.demo.internkotlinspringbootdemo.constants.SuccessCode.UPDATE_ACCOUNT_SUCCESS
 import com.demo.internkotlinspringbootdemo.constants.SuccessCode.CREATE_ACCOUNT_SUCCESS
 import com.demo.internkotlinspringbootdemo.constants.SuccessCode.GET_ACCOUNT_SUCCESS
 import com.demo.internkotlinspringbootdemo.constants.SuccessCode.GET_ALL_ACCOUNT_SUCCESS
+import com.demo.internkotlinspringbootdemo.constants.SuccessCode.DELETE_ACCOUNT_SUCCESS
 import com.demo.internkotlinspringbootdemo.dto.AccountCreateRes
+import com.demo.internkotlinspringbootdemo.dto.AccountDeleteRes
 import com.demo.internkotlinspringbootdemo.dto.AccountGetAllRes
 import com.demo.internkotlinspringbootdemo.dto.AccountGetRes
+import com.demo.internkotlinspringbootdemo.dto.AccountUpdateReq
+import com.demo.internkotlinspringbootdemo.dto.AccountUpdateRes
 import com.demo.internkotlinspringbootdemo.dto.TemplateResponse
 import com.demo.internkotlinspringbootdemo.entity.Account
 import com.demo.internkotlinspringbootdemo.mapper.AccountCreateMapper
@@ -44,10 +48,25 @@ class AccountController(private val accountService: AccountService) {
         return TemplateResponse(GET_ACCOUNT_SUCCESS.getCode(), GET_ACCOUNT_SUCCESS.getMessage(), accountDetails)
     }
 
+    @PostMapping("/update/{id}")
+    fun updateAccount(
+        @PathVariable id: UUID,
+        @Valid @RequestBody updatedAccount: AccountUpdateReq
+    ): TemplateResponse<AccountUpdateRes> {
+        val accountToUpdate = accountService.updateAccount(id,updatedAccount)
+        return TemplateResponse(UPDATE_ACCOUNT_SUCCESS.getCode(), UPDATE_ACCOUNT_SUCCESS.getMessage(), accountToUpdate)
+    }
+
     @PostMapping("/create")
     fun createAccount(@Valid @RequestBody account: Account): TemplateResponse<AccountCreateRes> {
         val accountToCreate = accountService.createAccount(account)
         val accountDetail = AccountCreateMapper.toAccountCreateRes(accountToCreate)
         return TemplateResponse(CREATE_ACCOUNT_SUCCESS.getCode(), CREATE_ACCOUNT_SUCCESS.getMessage(), accountDetail)
+    }
+
+    @PostMapping("/delete/{id}")
+    fun deleteAccount(@PathVariable id: UUID): TemplateResponse<AccountDeleteRes> {
+        val accountToDelete = accountService.deleteAccount(id)
+        return TemplateResponse(DELETE_ACCOUNT_SUCCESS.getCode(), DELETE_ACCOUNT_SUCCESS.getMessage(), accountToDelete)
     }
 }

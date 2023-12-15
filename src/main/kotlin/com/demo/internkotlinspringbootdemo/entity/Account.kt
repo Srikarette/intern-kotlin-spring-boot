@@ -14,27 +14,27 @@ import java.util.UUID
 data class Account(
     @Id
     @Column(name = "id")
-    val id: UUID? = null,
+    var id: UUID? = null,
 
     @Column(name = "first_name")
-    val firstName: String,
+    var firstName: String,
 
     @Column(name = "last_name")
-    val lastName: String,
+    var lastName: String,
 
     @Column(name = "gender")
     @Enumerated(STRING)
-    val gender: GenderConstants,
+    var gender: GenderConstants,
 
     @Column(name = "phone_number")
-    val phoneNumber: String?,
+    var phoneNumber: String?,
 
     @Column(name = "email")
-    val email: String?,
+    var email: String?,
 
     @Column(name = "username")
-    val userName: String?,
+    var userName: String?,
 
     @Column(name = "password")
-    val password: String
+    var password: String
 )
