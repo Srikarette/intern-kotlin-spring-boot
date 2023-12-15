@@ -1,4 +1,7 @@
 package com.demo.internkotlinspringbootdemo.service
 
-class PetService {
+import org.springframework.stereotype.Service
+
+@Service
+class PetService() {
 }
