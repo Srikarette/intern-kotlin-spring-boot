@@ -1,7 +1,6 @@
 package com.demo.internkotlinspringbootdemo.controller.advice
 
 import com.demo.internkotlinspringbootdemo.constants.BusinessException
-import com.demo.internkotlinspringbootdemo.constants.ErrorCode
 import com.demo.internkotlinspringbootdemo.constants.ErrorCode.VALIDATION_ERROR
 import com.demo.internkotlinspringbootdemo.dto.TemplateResponse
 import org.springframework.http.HttpStatus

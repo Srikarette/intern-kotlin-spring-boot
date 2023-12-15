@@ -1,36 +1,41 @@
 package com.demo.internkotlinspringbootdemo.entity
 
 import com.demo.internkotlinspringbootdemo.constants.GenderConstants
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
 import jakarta.persistence.EnumType.STRING
-import java.util.*
+import jakarta.persistence.Enumerated
+import jakarta.persistence.Id
+import jakarta.persistence.Table
+import java.util.UUID
+
 
 @Entity
 @Table(name = "accounts")
 data class Account(
     @Id
     @Column(name = "id")
-    var id: UUID? = null,
+    val id: UUID? = null,
 
     @Column(name = "first_name")
-    var firstName: String,
+    val firstName: String,
 
     @Column(name = "last_name")
-    var lastName: String,
+    val lastName: String,
 
     @Column(name = "gender")
     @Enumerated(STRING)
-    var gender: GenderConstants,
+    val gender: GenderConstants,
 
     @Column(name = "phone_number")
-    var phoneNumber: String?,
+    val phoneNumber: String?,
 
     @Column(name = "email")
-    var email: String?,
+    val email: String?,
 
     @Column(name = "username")
-    var userName: String?,
+    val userName: String?,
 
     @Column(name = "password")
-    var password: String
+    val password: String
 )

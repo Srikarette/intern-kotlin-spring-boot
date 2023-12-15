@@ -1,10 +1,10 @@
 package com.demo.internkotlinspringbootdemo.controller
 
-import com.demo.internkotlinspringbootdemo.constants.SuccessCode.UPDATE_ACCOUNT_SUCCESS
+import com.demo.internkotlinspringbootdemo.constants.SuccessCode
 import com.demo.internkotlinspringbootdemo.constants.SuccessCode.CREATE_ACCOUNT_SUCCESS
+import com.demo.internkotlinspringbootdemo.constants.SuccessCode.DELETE_ACCOUNT_SUCCESS
 import com.demo.internkotlinspringbootdemo.constants.SuccessCode.GET_ACCOUNT_SUCCESS
 import com.demo.internkotlinspringbootdemo.constants.SuccessCode.GET_ALL_ACCOUNT_SUCCESS
-import com.demo.internkotlinspringbootdemo.constants.SuccessCode.DELETE_ACCOUNT_SUCCESS
 import com.demo.internkotlinspringbootdemo.dto.AccountCreateRes
 import com.demo.internkotlinspringbootdemo.dto.AccountDeleteRes
 import com.demo.internkotlinspringbootdemo.dto.AccountGetAllRes
@@ -18,7 +18,6 @@ import com.demo.internkotlinspringbootdemo.mapper.AccountGetAllMapper
 import com.demo.internkotlinspringbootdemo.mapper.AccountGetMapper
 import com.demo.internkotlinspringbootdemo.service.AccountService
 import jakarta.validation.Valid
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -48,20 +47,20 @@ class AccountController(private val accountService: AccountService) {
         return TemplateResponse(GET_ACCOUNT_SUCCESS.getCode(), GET_ACCOUNT_SUCCESS.getMessage(), accountDetails)
     }
 
-    @PostMapping("/update/{id}")
-    fun updateAccount(
-        @PathVariable id: UUID,
-        @Valid @RequestBody updatedAccount: AccountUpdateReq
-    ): TemplateResponse<AccountUpdateRes> {
-        val accountToUpdate = accountService.updateAccount(id,updatedAccount)
-        return TemplateResponse(UPDATE_ACCOUNT_SUCCESS.getCode(), UPDATE_ACCOUNT_SUCCESS.getMessage(), accountToUpdate)
-    }
-
     @PostMapping("/create")
     fun createAccount(@Valid @RequestBody account: Account): TemplateResponse<AccountCreateRes> {
         val accountToCreate = accountService.createAccount(account)
         val accountDetail = AccountCreateMapper.toAccountCreateRes(accountToCreate)
         return TemplateResponse(CREATE_ACCOUNT_SUCCESS.getCode(), CREATE_ACCOUNT_SUCCESS.getMessage(), accountDetail)
+    }
+
+    @PostMapping("/update/{id}")
+    fun updateAccount(
+        @PathVariable id: UUID,
+        @Valid @RequestBody updatedAccount: AccountUpdateReq
+    ): TemplateResponse<AccountUpdateRes> {
+        val accountToUpdate = accountService.updateAccount(id, updatedAccount)
+        return TemplateResponse(SuccessCode.UPDATE_ACCOUNT_SUCCESS.getCode(), SuccessCode.UPDATE_ACCOUNT_SUCCESS.getMessage(), accountToUpdate)
     }
 
     @PostMapping("/delete/{id}")
