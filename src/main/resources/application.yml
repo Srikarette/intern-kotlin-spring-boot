@@ -4,8 +4,8 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/clinic
-    username: sqladmin
-    password: password
+    username: postgres
+    password: 123456
 
   jpa:
     properties:

@@ -1,0 +1,23 @@
+package com.demo.internkotlinspringbootdemo.constants
+
+enum class SuccessCode (private val errorCode: Int, private val errorMessage: String) {
+    CREATE_ACCOUNT_SUCCESS(1000,"CREATE ACCOUNT SUCCESS"),
+    UPDATE_ACCOUNT_SUCCESS(1000, "UPDATE ACCOUNT SUCCESS"),
+    DELETE_ACCOUNT_SUCCESS(1000,"DELETE ACCOUNT SUCCESS"),
+    GET_ALL_ACCOUNT_SUCCESS(1000,"GET ALL ACCOUNT SUCCESS"),
+    GET_ACCOUNT_SUCCESS(1000,"GET ACCOUNT SUCCESS"),
+    //FOR BOOK SERVICE PART
+    CREATE_BOOK_SUCCESS(1000,"CREATE BOOK SUCCESS"),
+    UPDATE_BOOK_SUCCESS(1000, "UPDATE BOOK SUCCESS"),
+    DELETE_BOOK_SUCCESS(1000,"DELETE BOOK SUCCESS"),
+    GET_ALL_BOOK_SUCCESS(1000,"GET ALL BOOK SUCCESS"),
+    GET_BOOK_SUCCESS(1000,"GET BOOK SUCCESS");
+
+    fun getCode(): Int {
+        return errorCode
+    }
+
+    fun getMessage(): String {
+        return errorMessage
+    }
+}
