@@ -1,10 +1,10 @@
 package com.demo.internkotlinspringbootdemo.dto
 
 import com.demo.internkotlinspringbootdemo.constants.GenderConstants
-import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.Size
+import java.util.*
 
 data class AccountCreateRes(
+    val id: UUID,
     val firstName: String,
     val lastName: String,
     val gender: GenderConstants,

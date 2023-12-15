@@ -7,6 +7,7 @@ class AccountCreateMapper private constructor() {
     companion object {
         fun toAccountCreateRes(account: Account): AccountCreateRes {
             return AccountCreateRes(
+                id = account.id!!,
                 firstName = account.firstName,
                 lastName = account.lastName,
                 gender = account.gender,
