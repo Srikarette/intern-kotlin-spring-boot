@@ -4,12 +4,14 @@ import com.demo.internkotlinspringbootdemo.constants.BusinessException
 import com.demo.internkotlinspringbootdemo.constants.ErrorCode.ACCOUNT_ALREADY_EXISTS
 import com.demo.internkotlinspringbootdemo.constants.ErrorCode.ACCOUNT_NOT_FOUND
 import com.demo.internkotlinspringbootdemo.constants.ErrorCode.PASSWORD_MISMATCH
+import com.demo.internkotlinspringbootdemo.dto.AccountCreateReq
 import com.demo.internkotlinspringbootdemo.dto.AccountDeleteRes
 import com.demo.internkotlinspringbootdemo.dto.AccountUpdateReq
 import com.demo.internkotlinspringbootdemo.dto.AccountUpdateRes
 import com.demo.internkotlinspringbootdemo.entity.Account
 import com.demo.internkotlinspringbootdemo.mapper.AccountDeleteMapper
 import com.demo.internkotlinspringbootdemo.mapper.AccountUpdateMapper
+import com.demo.internkotlinspringbootdemo.repository.AccountProjection
 import com.demo.internkotlinspringbootdemo.repository.AccountRepository
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -17,10 +19,25 @@ import java.util.UUID
 
 @Service
 class AccountService(private val accountRepository: AccountRepository) {
-    val passwordEncoder = BCryptPasswordEncoder()
+    private val passwordEncoder = BCryptPasswordEncoder()
     fun getAllAccounts(): List<Account> {
         return accountRepository.findAll()
     }
+
+    fun getAccountPetCount(): List<AccountProjection> {
+        return accountRepository.getUserPetCounts()
+    }
+
+    fun getAccountPetByAccountId(id: UUID): AccountProjection {
+        val existingAccount = accountRepository.existsById(id)
+
+        if (!existingAccount) {
+            throw BusinessException(ACCOUNT_NOT_FOUND.getCode(), ACCOUNT_NOT_FOUND.getMessage())
+        }
+
+        return accountRepository.getUserPetCountsById(id)
+    }
+
 
     fun getAccountById(id: UUID): Account {
         val existingAccount = accountRepository.findById(id)
@@ -30,8 +47,7 @@ class AccountService(private val accountRepository: AccountRepository) {
         return existingAccount.get()
     }
 
-    fun createAccount(account: Account): Account {
-        val accountId = UUID.randomUUID()
+    fun createAccount(account: AccountCreateReq): Account {
         val accountExistsByEmail = accountRepository.existsByEmail(account.email!!)
 
         if (accountExistsByEmail) {
@@ -42,8 +58,17 @@ class AccountService(private val accountRepository: AccountRepository) {
         val passwordEncoder = BCryptPasswordEncoder()
         val hashedPassword = passwordEncoder.encode(account.password)
 
-        val accountToSave = account.copy(id = accountId, password = hashedPassword)
-        return accountRepository.save(accountToSave)
+        val accountCreated = Account(
+            id = UUID.randomUUID(),
+            firstName = account.firstName,
+            lastName = account.lastName,
+            gender = account.gender,
+            phoneNumber = account.phoneNumber,
+            email = account.email,
+            userName = account.userName,
+            password = hashedPassword,
+            )
+        return accountRepository.save(accountCreated)
     }
 
     fun updateAccount(id: UUID, updatedAccount: AccountUpdateReq): AccountUpdateRes {

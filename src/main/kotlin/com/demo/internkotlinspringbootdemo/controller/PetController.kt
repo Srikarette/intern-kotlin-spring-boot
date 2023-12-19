@@ -1,10 +1,11 @@
 package com.demo.internkotlinspringbootdemo.controller
 
-import com.demo.internkotlinspringbootdemo.constants.SuccessCode
-import com.demo.internkotlinspringbootdemo.constants.SuccessCode.DELETE_ACCOUNT_SUCCESS
-import com.demo.internkotlinspringbootdemo.constants.SuccessCode.GET_ACCOUNT_SUCCESS
-import com.demo.internkotlinspringbootdemo.constants.SuccessCode.GET_ALL_ACCOUNT_SUCCESS
-import com.demo.internkotlinspringbootdemo.constants.SuccessCode.UPDATE_ACCOUNT_SUCCESS
+import com.demo.internkotlinspringbootdemo.constants.SuccessCode.CREATE_PET_SUCCESS
+import com.demo.internkotlinspringbootdemo.constants.SuccessCode.DELETE_PET_SUCCESS
+import com.demo.internkotlinspringbootdemo.constants.SuccessCode.GET_ALL_PET_SUCCESS
+import com.demo.internkotlinspringbootdemo.constants.SuccessCode.GET_PET_SUCCESS
+import com.demo.internkotlinspringbootdemo.constants.SuccessCode.UPDATE_PET_SUCCESS
+import com.demo.internkotlinspringbootdemo.dto.PetCreateReq
 import com.demo.internkotlinspringbootdemo.dto.PetCreateRes
 import com.demo.internkotlinspringbootdemo.dto.PetDeleteRes
 import com.demo.internkotlinspringbootdemo.dto.PetGetAllRes
@@ -12,7 +13,6 @@ import com.demo.internkotlinspringbootdemo.dto.PetGetRes
 import com.demo.internkotlinspringbootdemo.dto.PetUpdateReq
 import com.demo.internkotlinspringbootdemo.dto.PetUpdateRes
 import com.demo.internkotlinspringbootdemo.dto.TemplateResponse
-import com.demo.internkotlinspringbootdemo.entity.Pet
 import com.demo.internkotlinspringbootdemo.mapper.PetCreateMapper
 import com.demo.internkotlinspringbootdemo.mapper.PetGetAllMapper
 import com.demo.internkotlinspringbootdemo.mapper.PetGetMapper
@@ -33,8 +33,8 @@ class PetController(private val petService: PetService) {
         val pets = petService.getAllPets()
         val petsDetails = PetGetAllMapper.toPetGetAllRes(pets)
         return TemplateResponse(
-            GET_ALL_ACCOUNT_SUCCESS.getCode(),
-            GET_ALL_ACCOUNT_SUCCESS.getMessage(),
+            GET_ALL_PET_SUCCESS.getCode(),
+            GET_ALL_PET_SUCCESS.getMessage(),
             petsDetails
         )
     }
@@ -44,19 +44,19 @@ class PetController(private val petService: PetService) {
         val pet = petService.getPetById(id)
         val petDetails = PetGetMapper.toPetGetRes(pet)
         return TemplateResponse(
-            GET_ACCOUNT_SUCCESS.getCode(),
-            GET_ACCOUNT_SUCCESS.getMessage(),
+            GET_PET_SUCCESS.getCode(),
+            GET_PET_SUCCESS.getMessage(),
             petDetails
         )
     }
 
     @PostMapping("/create")
-    fun createPett(@Valid @RequestBody pet: Pet): TemplateResponse<PetCreateRes> {
+    fun createPet(@Valid @RequestBody pet: PetCreateReq): TemplateResponse<PetCreateRes> {
         val petToCreate = petService.createPet(pet)
         val accountDetail = PetCreateMapper.toPetCreateRes(petToCreate)
         return TemplateResponse(
-            SuccessCode.CREATE_ACCOUNT_SUCCESS.getCode(),
-            SuccessCode.CREATE_ACCOUNT_SUCCESS.getMessage(),
+            CREATE_PET_SUCCESS.getCode(),
+            CREATE_PET_SUCCESS.getMessage(),
             accountDetail
         )
     }
@@ -68,8 +68,8 @@ class PetController(private val petService: PetService) {
     ): TemplateResponse<PetUpdateRes> {
         val petToUpdate = petService.updateAccount(id, updatedPet)
         return TemplateResponse(
-            UPDATE_ACCOUNT_SUCCESS.getCode(),
-            UPDATE_ACCOUNT_SUCCESS.getMessage(),
+            UPDATE_PET_SUCCESS.getCode(),
+            UPDATE_PET_SUCCESS.getMessage(),
             petToUpdate
         )
     }
@@ -78,8 +78,8 @@ class PetController(private val petService: PetService) {
     fun deleteAccount(@PathVariable id: UUID): TemplateResponse<PetDeleteRes> {
         val petToDelete = petService.deleteAccount(id)
         return TemplateResponse(
-            DELETE_ACCOUNT_SUCCESS.getCode(),
-            DELETE_ACCOUNT_SUCCESS.getMessage(),
+            DELETE_PET_SUCCESS.getCode(),
+            DELETE_PET_SUCCESS.getMessage(),
             petToDelete
         )
     }
