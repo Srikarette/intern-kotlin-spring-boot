@@ -30,11 +30,9 @@ class AccountService(private val accountRepository: AccountRepository) {
 
     fun getAccountPetByAccountId(id: UUID): AccountProjection {
         val existingAccount = accountRepository.existsById(id)
-
         if (!existingAccount) {
             throw BusinessException(ACCOUNT_NOT_FOUND.getCode(), ACCOUNT_NOT_FOUND.getMessage())
         }
-
         return accountRepository.getUserPetCountsById(id)
     }
 
@@ -67,7 +65,7 @@ class AccountService(private val accountRepository: AccountRepository) {
             email = account.email,
             userName = account.userName,
             password = hashedPassword,
-            )
+        )
         return accountRepository.save(accountCreated)
     }
 
@@ -84,19 +82,19 @@ class AccountService(private val accountRepository: AccountRepository) {
             throw BusinessException(PASSWORD_MISMATCH.getCode(), PASSWORD_MISMATCH.getMessage())
         }
 
-        val updatedEntity = existingAccount.get().copy(
-            firstName = updatedAccount.firstName,
-            lastName = updatedAccount.lastName,
-            gender = updatedAccount.gender,
-            phoneNumber = updatedAccount.phoneNumber,
-            userName = updatedAccount.userName,
-            password = updatedAccount.password,
-            email = updatedAccount.email
-        )
+        val updatedEntity = existingAccount.get()
+        updatedEntity.apply {
+            firstName = updatedAccount.firstName?:firstName
+            lastName = updatedAccount.lastName?:lastName
+            gender = updatedAccount.gender?:gender
+            phoneNumber = updatedAccount.phoneNumber?:phoneNumber
+            email = updatedAccount.email?:email
+            userName = updatedAccount.userName
+            password = updatedAccount.password
+        }
         val updatedAccountDetail = accountRepository.save(updatedEntity)
         return AccountUpdateMapper.toAccountUpdateRes(updatedAccountDetail)
     }
-
     fun deleteAccount(id: UUID): AccountDeleteRes {
         val existingAccount = accountRepository.findById(id)
         if (existingAccount.isEmpty) {
