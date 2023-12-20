@@ -1,5 +1,6 @@
 package com.demo.internkotlinspringbootdemo.entity
 
+import com.demo.internkotlinspringbootdemo.constants.PetTypes
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -23,5 +24,5 @@ data class Pet(
     val gender: String?,
 
     @Column(name = "type")
-    val type: String?
+    val type: PetTypes?
 )

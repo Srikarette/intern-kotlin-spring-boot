@@ -2,6 +2,7 @@ package com.demo.internkotlinspringbootdemo.service
 
 import com.demo.internkotlinspringbootdemo.constants.BusinessException
 import com.demo.internkotlinspringbootdemo.constants.ErrorCode.PET_NOT_FOUND
+import com.demo.internkotlinspringbootdemo.constants.PetTypes.CAT
 import com.demo.internkotlinspringbootdemo.dto.PetCreateReq
 import com.demo.internkotlinspringbootdemo.dto.PetDeleteRes
 import com.demo.internkotlinspringbootdemo.dto.PetUpdateReq
@@ -49,7 +50,7 @@ class PetService(private val petRepository: PetRepository) {
             ownerId = updatedPet.ownerId,
             name = updatedPet.name,
             gender = updatedPet.gender,
-            type = updatedPet.type
+            type = CAT
         )
         val updatedPetDetail = petRepository.save(updatedEntity)
         return PetUpdateMapper.toPetUpdate(updatedPetDetail)

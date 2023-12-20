@@ -144,7 +144,7 @@ class AccountServiceTest {
         every { accountRepository.save(any()) } returns existingAccount.copy(
             firstName = accountUpdateReq.firstName!!,
             lastName = accountUpdateReq.lastName!!,
-            gender = accountUpdateReq.gender,
+            gender = accountUpdateReq.gender!!,
             phoneNumber = accountUpdateReq.phoneNumber,
             userName = accountUpdateReq.userName,
             password = accountUpdateReq.password,
@@ -253,7 +253,7 @@ class AccountServiceTest {
             id = UUID.randomUUID(),
             firstName = account.firstName!!,
             lastName = account.lastName!!,
-            gender = account.gender,
+            gender = account.gender!!,
             phoneNumber = account.phoneNumber,
             email = account.email,
             userName = account.userName,
