@@ -1,4 +1,4 @@
-
+package com.demo.internkotlinspringbootdemo.service
 import com.demo.internkotlinspringbootdemo.constants.BusinessException
 import com.demo.internkotlinspringbootdemo.constants.ErrorCode.ACCOUNT_ALREADY_EXISTS
 import com.demo.internkotlinspringbootdemo.constants.ErrorCode.ACCOUNT_NOT_FOUND
@@ -14,7 +14,6 @@ import com.demo.internkotlinspringbootdemo.dto.AccountUpdateRes
 import com.demo.internkotlinspringbootdemo.entity.Account
 import com.demo.internkotlinspringbootdemo.repository.AccountProjection
 import com.demo.internkotlinspringbootdemo.repository.AccountRepository
-import com.demo.internkotlinspringbootdemo.service.AccountService
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
