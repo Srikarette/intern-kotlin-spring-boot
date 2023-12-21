@@ -18,8 +18,10 @@ import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
-class AccountService(private val accountRepository: AccountRepository) {
-    private val passwordEncoder = BCryptPasswordEncoder()
+class AccountService(
+    private val passwordEncoder: BCryptPasswordEncoder,
+    private val accountRepository: AccountRepository
+) {
     fun getAllAccounts(): List<Account> {
         return accountRepository.findAll()
     }
@@ -53,11 +55,9 @@ class AccountService(private val accountRepository: AccountRepository) {
         }
 
         // Hash the password
-        val passwordEncoder = BCryptPasswordEncoder()
         val hashedPassword = passwordEncoder.encode(account.password)
 
         val accountCreated = Account(
-            id = UUID.randomUUID(),
             firstName = account.firstName,
             lastName = account.lastName,
             gender = account.gender,
@@ -70,19 +70,20 @@ class AccountService(private val accountRepository: AccountRepository) {
     }
 
     fun updateAccount(id: UUID, updatedAccount: AccountUpdateReq): AccountUpdateRes {
-        val existingAccount = accountRepository.findById(id)
+         val existingAccount = accountRepository.findById(id)
 
         if (existingAccount.isEmpty) {
             throw BusinessException(ACCOUNT_NOT_FOUND.getCode(), ACCOUNT_NOT_FOUND.getMessage())
         }
-        val passwordChecker = passwordEncoder.matches(updatedAccount.password, existingAccount.get().password)
+        val accountData = existingAccount.get()
+        val passwordChecker = passwordEncoder.matches(updatedAccount.password, accountData.password)
 
         if (!passwordChecker) {
             // Handle case where the old password is incorrect
             throw BusinessException(PASSWORD_MISMATCH.getCode(), PASSWORD_MISMATCH.getMessage())
         }
 
-        val updatedEntity = existingAccount.get()
+        val updatedEntity = accountData
         updatedEntity.apply {
             firstName = updatedAccount.firstName?:firstName
             lastName = updatedAccount.lastName?:lastName
@@ -90,7 +91,7 @@ class AccountService(private val accountRepository: AccountRepository) {
             phoneNumber = updatedAccount.phoneNumber?:phoneNumber
             email = updatedAccount.email?:email
             userName = updatedAccount.userName
-            password = updatedAccount.password
+            password = accountData.password
         }
         val updatedAccountDetail = accountRepository.save(updatedEntity)
         return AccountUpdateMapper.toAccountUpdateRes(updatedAccountDetail)
@@ -100,6 +101,7 @@ class AccountService(private val accountRepository: AccountRepository) {
         if (existingAccount.isEmpty) {
             throw BusinessException(ACCOUNT_NOT_FOUND.getCode(), ACCOUNT_NOT_FOUND.getMessage())
         }
+
         val deletedAccount = existingAccount.get()
         accountRepository.deleteById(id)
 

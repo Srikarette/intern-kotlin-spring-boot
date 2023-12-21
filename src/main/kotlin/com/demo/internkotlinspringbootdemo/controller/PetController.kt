@@ -7,6 +7,7 @@ import com.demo.internkotlinspringbootdemo.constants.SuccessCode.GET_PET_SUCCESS
 import com.demo.internkotlinspringbootdemo.constants.SuccessCode.UPDATE_PET_SUCCESS
 import com.demo.internkotlinspringbootdemo.dto.PetCreateReq
 import com.demo.internkotlinspringbootdemo.dto.PetCreateRes
+import com.demo.internkotlinspringbootdemo.dto.PetDeleteReq
 import com.demo.internkotlinspringbootdemo.dto.PetDeleteRes
 import com.demo.internkotlinspringbootdemo.dto.PetGetAllRes
 import com.demo.internkotlinspringbootdemo.dto.PetGetRes
@@ -66,7 +67,7 @@ class PetController(private val petService: PetService) {
         @PathVariable id: UUID,
         @Valid @RequestBody updatedPet: PetUpdateReq
     ): TemplateResponse<PetUpdateRes> {
-        val petToUpdate = petService.updateAccount(id, updatedPet)
+        val petToUpdate = petService.updatePet(id, updatedPet)
         return TemplateResponse(
             UPDATE_PET_SUCCESS.getCode(),
             UPDATE_PET_SUCCESS.getMessage(),
@@ -75,8 +76,8 @@ class PetController(private val petService: PetService) {
     }
 
     @PostMapping("/delete/{id}")
-    fun deleteAccount(@PathVariable id: UUID): TemplateResponse<PetDeleteRes> {
-        val petToDelete = petService.deleteAccount(id)
+    fun deleteAccount(@Valid @PathVariable id: UUID,@RequestBody deletePet:PetDeleteReq): TemplateResponse<PetDeleteRes> {
+        val petToDelete = petService.deletePet(id, deletePet)
         return TemplateResponse(
             DELETE_PET_SUCCESS.getCode(),
             DELETE_PET_SUCCESS.getMessage(),

@@ -1,5 +1,6 @@
 package com.demo.internkotlinspringbootdemo.dto
 
+import com.demo.internkotlinspringbootdemo.constants.PetTypes
 import java.util.UUID
 
 data class PetGetRes(
@@ -7,5 +8,5 @@ data class PetGetRes(
     val ownerId: UUID,
     val name: String,
     val gender: String?,
-    val type: String?
+    val type: PetTypes?
 )

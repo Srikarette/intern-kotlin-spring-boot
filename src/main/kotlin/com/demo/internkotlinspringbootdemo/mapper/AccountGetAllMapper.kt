@@ -1,6 +1,5 @@
 package com.demo.internkotlinspringbootdemo.mapper
 
-import com.demo.internkotlinspringbootdemo.constants.GenderConstants
 import com.demo.internkotlinspringbootdemo.dto.AccountGetAllRes
 import com.demo.internkotlinspringbootdemo.entity.Account
 

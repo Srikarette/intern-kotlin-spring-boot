@@ -1,7 +1,6 @@
 package com.demo.internkotlinspringbootdemo.dto
 
-import jakarta.persistence.Column
-import jakarta.persistence.Id
+import com.demo.internkotlinspringbootdemo.constants.PetTypes
 import java.util.UUID
 
 data class PetCreateRes(
@@ -9,5 +8,5 @@ data class PetCreateRes(
     val ownerId: UUID,
     val name: String,
     val gender: String?,
-    val type: String?
+    val type: PetTypes?
 )

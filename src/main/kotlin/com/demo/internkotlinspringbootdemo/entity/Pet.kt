@@ -14,7 +14,6 @@ data class Pet(
     @Column(name = "id")
     val id: UUID? = null,
 
-    @Column(name = "owner_id")
     val ownerId: UUID,
 
     @Column(name = "name")
