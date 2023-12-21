@@ -1,17 +1,23 @@
+
 import com.demo.internkotlinspringbootdemo.constants.BusinessException
 import com.demo.internkotlinspringbootdemo.constants.ErrorCode.ACCOUNT_ALREADY_EXISTS
 import com.demo.internkotlinspringbootdemo.constants.ErrorCode.ACCOUNT_NOT_FOUND
+import com.demo.internkotlinspringbootdemo.constants.ErrorCode.PASSWORD_MISMATCH
 import com.demo.internkotlinspringbootdemo.constants.GenderConstants.MALE
 import com.demo.internkotlinspringbootdemo.constants.GenderConstants.OTHERS
 import com.demo.internkotlinspringbootdemo.dto.AccountCreateReq
+import com.demo.internkotlinspringbootdemo.dto.AccountDeleteReq
+import com.demo.internkotlinspringbootdemo.dto.AccountDeleteRes
+import com.demo.internkotlinspringbootdemo.dto.AccountGetReq
 import com.demo.internkotlinspringbootdemo.dto.AccountUpdateReq
 import com.demo.internkotlinspringbootdemo.dto.AccountUpdateRes
 import com.demo.internkotlinspringbootdemo.entity.Account
-import com.demo.internkotlinspringbootdemo.mapper.AccountDeleteMapper
 import com.demo.internkotlinspringbootdemo.repository.AccountProjection
 import com.demo.internkotlinspringbootdemo.repository.AccountRepository
 import com.demo.internkotlinspringbootdemo.service.AccountService
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -36,10 +42,32 @@ class AccountServiceTest {
         fun `Given valid account ID When deleteAccount Then account is deleted`() {
             // Given
             val accountId = UUID.randomUUID()
-            val existingAccount = deleteMockAccount("John", "Doe", accountId)
-            val expectedResult = AccountDeleteMapper.toAccountDeleteRes(existingAccount)
-            every { accountRepository.findById(accountId) } returns Optional.of(existingAccount)
-            every { accountRepository.deleteById(accountId) } answers { /* do nothing */ }
+            val expectedResult = AccountDeleteRes(
+                id = accountId,
+                firstName = "Gilbert Grant",
+                lastName = "Shawn Sims",
+                gender = OTHERS,
+                userName = "username"
+            )
+            val deleteData = Account(
+                id = accountId,
+                firstName = "Gilbert Grant",
+                lastName = "Shawn Sims",
+                gender = OTHERS,
+                phoneNumber = "0123456",
+                email = "test@example.com",
+                userName = "username",
+                password = "password"
+            )
+            val request = AccountDeleteReq(
+                id = accountId,
+                userName = "username",
+                password = "password"
+
+            )
+
+            every { accountRepository.findById(request.id) } returns Optional.of(deleteData)
+            every { accountRepository.deleteById(request.id) } just Runs
 
             // When
             val actualResult = accountService.deleteAccount(accountId)
@@ -94,8 +122,38 @@ class AccountServiceTest {
         fun `Given valid account ID When getAccountById Then account is returned`() {
             // Given
             val accountId = UUID.randomUUID()
-            val expectedAccount = getByIdMockAccount("John", "Doe", accountId)
-            every { accountRepository.findById(accountId) } returns Optional.of(expectedAccount)
+            val expectedAccount = Account(
+                id = accountId,
+                firstName = "Harold Hendrix",
+                lastName = "Jeffry Gomez",
+                gender = OTHERS,
+                phoneNumber = "0123456",
+                email = "test@example.com",
+                userName = "username",
+                password = "password"
+            )
+            val accountData = Account(
+                id = accountId,
+                firstName = "Harold Hendrix",
+                lastName = "Jeffry Gomez",
+                gender = OTHERS,
+                phoneNumber = "0123456",
+                email = "test@example.com",
+                userName = "username",
+                password = "password"
+            )
+
+            val request = AccountGetReq(
+                id = accountId,
+                firstName = "Harold Hendrix",
+                lastName = "Jeffry Gomez",
+                gender = OTHERS,
+                phoneNumber = "0123456",
+                email = "test@example.com",
+                userName = "username",
+                password = "password"
+            )
+            every { accountRepository.findById(accountId) } returns Optional.of(accountData)
 
             // When
             val actualAccount = accountService.getAccountById(accountId)
@@ -204,6 +262,7 @@ class AccountServiceTest {
     @DisplayName("UpdateAccount")
     inner class UpdateAccountTest() {
         private val hashedPassword = "hkljkl"
+
         @Test
         fun `Given valid update request when updateAccount then account is updated`() {
             // Given
@@ -300,7 +359,52 @@ class AccountServiceTest {
 
         @Test
         fun `Given invalid password ID when updateAccount then BusinessException is thrown`() {
+            // Given
+            val accountId = UUID.randomUUID()
+            val expectedResult = AccountUpdateRes(
+                firstName = "newFirstName",
+                lastName = "newLastName",
+                gender = MALE,
+                phoneNumber = "0123456",
+                email = "test@example.com",
+                userName = "newUserName",
+                password = hashedPassword
+            )
 
+            val accountData = Account(
+                firstName = "newFirstName",
+                lastName = "newLastName",
+                gender = MALE,
+                phoneNumber = "0123456",
+                email = "test@example.com",
+                userName = "newUserName",
+                password = hashedPassword
+            )
+
+            val request = AccountUpdateReq(
+                firstName = "newFirstName",
+                lastName = "newLastName",
+                gender = MALE,
+                phoneNumber = "0123456",
+                email = "test@example.com",
+                userName = "newUserName",
+                password = "password"
+            )
+            val expectedException = BusinessException(PASSWORD_MISMATCH.getCode(), PASSWORD_MISMATCH.getMessage())
+
+            every { accountRepository.findById(accountId) } returns Optional.of(accountData)
+            every { passwordEncoder.matches(request.password, hashedPassword) } returns false
+            every { accountRepository.save(accountData) } returns accountData
+
+            // When-Then
+            val exception = assertThrows(BusinessException::class.java) {
+                accountService.updateAccount(accountId, request)
+            }
+
+            assertEquals(expectedException, exception)
+
+            verify(exactly = 1) { accountRepository.findById(accountId) }
+            verify(exactly = 0) { accountRepository.save(accountData) }
         }
     }
 
@@ -342,6 +446,7 @@ class AccountServiceTest {
             // Verify that getUserPetCountsById was not called
             verify(exactly = 0) { accountRepository.getUserPetCountsById(any()) }
         }
+
         @Test
         fun `Given valid request When getAccountPetCount Then List of AccountProjection is returned`() {
             // Given
@@ -357,19 +462,6 @@ class AccountServiceTest {
         }
     }
 
-    private fun getByIdMockAccount(firstName: String, lastName: String, id: UUID): Account {
-        return Account(
-            id = id,
-            firstName = firstName,
-            lastName = lastName,
-            gender = MALE,
-            phoneNumber = "1234567890",
-            email = "test@example.com",
-            userName = "testUser",
-            password = "password"
-        )
-    }
-
     private fun getAllMockAccount(firstName: String, lastName: String): Account {
         return Account(
             id = UUID.randomUUID(),
@@ -382,20 +474,6 @@ class AccountServiceTest {
             password = "password"
         )
     }
-
-    private fun deleteMockAccount(firstName: String, lastName: String, id: UUID): Account {
-        return Account(
-            id = id,
-            firstName = firstName,
-            lastName = lastName,
-            gender = MALE,
-            phoneNumber = "1234567890",
-            email = "test@example.com",
-            userName = "testUser",
-            password = "password"
-        )
-    }
-
     private fun createMockAccountProjections(): List<AccountProjection> {
         val userId1 = UUID.randomUUID()
         val userId2 = UUID.randomUUID()

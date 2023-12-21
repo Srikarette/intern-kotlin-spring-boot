@@ -38,14 +38,14 @@ class PetService(private val petRepository: PetRepository, private val accountRe
     }
 
     fun createPet(pet: PetCreateReq): Pet {
-        validateOwnerIdExists(pet.ownerId)
+        validateOwnerIdExists(pet.ownerId!!)
 
         val petCreated = Pet(
             id = UUID.randomUUID(),
             ownerId = pet.ownerId,
             name = "Alexandria Hansen",
             gender = pet.gender,
-            type = pet.type
+            type = pet.type!!
         )
         return petRepository.save(petCreated)
     }
@@ -62,7 +62,7 @@ class PetService(private val petRepository: PetRepository, private val accountRe
             ownerId = updatedPet.ownerId,
             name = updatedPet.name,
             gender = updatedPet.gender,
-            type = updatedPet.type
+            type = updatedPet.type!!
         )
         val updatedPetDetail = petRepository.save(updatedEntity)
         return PetUpdateMapper.toPetUpdate(updatedPetDetail)

@@ -58,8 +58,8 @@ class AccountService(
         val hashedPassword = passwordEncoder.encode(account.password)
 
         val accountCreated = Account(
-            firstName = account.firstName,
-            lastName = account.lastName,
+            firstName = account.firstName!!,
+            lastName = account.lastName!!,
             gender = account.gender,
             phoneNumber = account.phoneNumber,
             email = account.email,
@@ -98,6 +98,7 @@ class AccountService(
     }
     fun deleteAccount(id: UUID): AccountDeleteRes {
         val existingAccount = accountRepository.findById(id)
+
         if (existingAccount.isEmpty) {
             throw BusinessException(ACCOUNT_NOT_FOUND.getCode(), ACCOUNT_NOT_FOUND.getMessage())
         }
