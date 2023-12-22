@@ -1,19 +1,20 @@
 package com.demo.internkotlinspringbootdemo.dto
 
 import com.demo.internkotlinspringbootdemo.constants.PetTypes
-import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import java.util.UUID
 
 data class PetUpdateReq(
-    @field:NotNull(message = "1:ownerId must not be Null")
-    val ownerId: UUID,
+    @field:NotNull(message = "1:ownerId must not be null")
+    val ownerId: UUID? = null,
 
-    @field:NotBlank(message = "2:name must have name")
-    @field:NotNull(message = "3:name must not be Null")
-    val name: String,
+    @field:NotNull(message = "2:petId must not be null")
+    val id: UUID? = null,
 
-    val gender: String?,
+    @field:NotNull(message = "3:name must not be null")
+    val name: String? = null,
 
-    val type: PetTypes?
+    val gender: String? = null,
+
+    val type: PetTypes? = null
 )

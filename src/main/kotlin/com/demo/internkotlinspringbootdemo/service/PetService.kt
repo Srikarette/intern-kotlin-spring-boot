@@ -6,6 +6,7 @@ import com.demo.internkotlinspringbootdemo.constants.ErrorCode.PET_NOT_FOUND
 import com.demo.internkotlinspringbootdemo.dto.PetCreateReq
 import com.demo.internkotlinspringbootdemo.dto.PetDeleteReq
 import com.demo.internkotlinspringbootdemo.dto.PetDeleteRes
+import com.demo.internkotlinspringbootdemo.dto.PetGetReq
 import com.demo.internkotlinspringbootdemo.dto.PetUpdateReq
 import com.demo.internkotlinspringbootdemo.dto.PetUpdateRes
 import com.demo.internkotlinspringbootdemo.entity.Pet
@@ -29,8 +30,8 @@ class PetService(private val petRepository: PetRepository, private val accountRe
         return petRepository.findAll()
     }
 
-    fun getPetById(id: UUID): Pet {
-        val existingPet = petRepository.findById(id)
+    fun getPetById(request: PetGetReq): Pet {
+        val existingPet = petRepository.findById(request.id!!)
         if (existingPet.isEmpty) {
             throw BusinessException(PET_NOT_FOUND.getCode(), PET_NOT_FOUND.getMessage())
         }
@@ -50,9 +51,9 @@ class PetService(private val petRepository: PetRepository, private val accountRe
         return petRepository.save(petCreated)
     }
 
-    fun updatePet(id: UUID, updatedPet: PetUpdateReq): PetUpdateRes {
-        validateOwnerIdExists(updatedPet.ownerId)
-        val existingPet = petRepository.findById(id)
+    fun updatePet(updatedPet: PetUpdateReq): PetUpdateRes {
+        validateOwnerIdExists(updatedPet.ownerId!!)
+        val existingPet = petRepository.findById(updatedPet.id!!)
 
         if (existingPet.isEmpty) {
             throw BusinessException(PET_NOT_FOUND.getCode(), PET_NOT_FOUND.getMessage())
@@ -60,7 +61,7 @@ class PetService(private val petRepository: PetRepository, private val accountRe
 
         val updatedEntity = existingPet.get().copy(
             ownerId = updatedPet.ownerId,
-            name = updatedPet.name,
+            name = updatedPet.name!!,
             gender = updatedPet.gender,
             type = updatedPet.type!!
         )
@@ -68,14 +69,14 @@ class PetService(private val petRepository: PetRepository, private val accountRe
         return PetUpdateMapper.toPetUpdate(updatedPetDetail)
     }
 
-    fun deletePet(id: UUID, deleteReq: PetDeleteReq): PetDeleteRes {
-        validateOwnerIdExists(deleteReq.ownerId);
-        val existingPet = petRepository.findById(id)
+    fun deletePet(deleteReq: PetDeleteReq): PetDeleteRes {
+        validateOwnerIdExists(deleteReq.ownerId!!);
+        val existingPet = petRepository.findById(deleteReq.id!!)
         if (existingPet.isEmpty) {
             throw BusinessException(PET_NOT_FOUND.getCode(), PET_NOT_FOUND.getMessage())
         }
         val deletedPet = existingPet.get()
-        petRepository.deleteById(id)
+        petRepository.deleteById(deleteReq.id)
 
         return PetDeleteMapper.toPetDeleteRes(deletedPet)
     }

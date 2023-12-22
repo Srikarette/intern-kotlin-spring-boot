@@ -1,7 +1,7 @@
 package com.demo.internkotlinspringbootdemo.dto
 
 import com.demo.internkotlinspringbootdemo.constants.GenderConstants
-import java.util.*
+import java.util.UUID
 
 data class AccountCreateRes(
     val id: UUID,

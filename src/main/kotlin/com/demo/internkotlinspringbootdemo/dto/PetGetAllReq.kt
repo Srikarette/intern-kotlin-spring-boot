@@ -4,8 +4,8 @@ import java.util.UUID
 
 data class PetGetAllReq(
     val id: UUID? = null,
-    val ownerId: UUID,
-    val name: String,
-    val gender: String?,
-    val type: String?
+    val ownerId: UUID? = null,
+    val name: String? = null,
+    val gender: String? = null,
+    val type: String? = null
 )

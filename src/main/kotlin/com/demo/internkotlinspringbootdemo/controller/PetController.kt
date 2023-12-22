@@ -10,6 +10,7 @@ import com.demo.internkotlinspringbootdemo.dto.PetCreateRes
 import com.demo.internkotlinspringbootdemo.dto.PetDeleteReq
 import com.demo.internkotlinspringbootdemo.dto.PetDeleteRes
 import com.demo.internkotlinspringbootdemo.dto.PetGetAllRes
+import com.demo.internkotlinspringbootdemo.dto.PetGetReq
 import com.demo.internkotlinspringbootdemo.dto.PetGetRes
 import com.demo.internkotlinspringbootdemo.dto.PetUpdateReq
 import com.demo.internkotlinspringbootdemo.dto.PetUpdateRes
@@ -19,18 +20,16 @@ import com.demo.internkotlinspringbootdemo.mapper.PetGetAllMapper
 import com.demo.internkotlinspringbootdemo.mapper.PetGetMapper
 import com.demo.internkotlinspringbootdemo.service.PetService
 import jakarta.validation.Valid
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
 
 @RestController
 @RequestMapping("/api/v1/pet")
 class PetController(private val petService: PetService) {
     @PostMapping
-    fun getAllAccounts(): TemplateResponse<List<PetGetAllRes>> {
+    fun getAllPets(): TemplateResponse<List<PetGetAllRes>> {
         val pets = petService.getAllPets()
         val petsDetails = PetGetAllMapper.toPetGetAllRes(pets)
         return TemplateResponse(
@@ -40,9 +39,9 @@ class PetController(private val petService: PetService) {
         )
     }
 
-    @PostMapping("/{id}")
-    fun getAccountById(@PathVariable id: UUID): TemplateResponse<PetGetRes> {
-        val pet = petService.getPetById(id)
+    @PostMapping("/get")
+    fun getPetById(@Valid @RequestBody request: PetGetReq): TemplateResponse<PetGetRes> {
+        val pet = petService.getPetById(request)
         val petDetails = PetGetMapper.toPetGetRes(pet)
         return TemplateResponse(
             GET_PET_SUCCESS.getCode(),
@@ -50,34 +49,30 @@ class PetController(private val petService: PetService) {
             petDetails
         )
     }
-
     @PostMapping("/create")
     fun createPet(@Valid @RequestBody pet: PetCreateReq): TemplateResponse<PetCreateRes> {
         val petToCreate = petService.createPet(pet)
-        val accountDetail = PetCreateMapper.toPetCreateRes(petToCreate)
+        val petDetail = PetCreateMapper.toPetCreateRes(petToCreate)
         return TemplateResponse(
             CREATE_PET_SUCCESS.getCode(),
             CREATE_PET_SUCCESS.getMessage(),
-            accountDetail
+            petDetail
         )
     }
-
-    @PostMapping("/update/{id}")
-    fun updateAccount(
-        @PathVariable id: UUID,
+    @PostMapping("/update")
+    fun updatePet(
         @Valid @RequestBody updatedPet: PetUpdateReq
     ): TemplateResponse<PetUpdateRes> {
-        val petToUpdate = petService.updatePet(id, updatedPet)
+        val petToUpdate = petService.updatePet(updatedPet)
         return TemplateResponse(
             UPDATE_PET_SUCCESS.getCode(),
             UPDATE_PET_SUCCESS.getMessage(),
             petToUpdate
         )
     }
-
-    @PostMapping("/delete/{id}")
-    fun deleteAccount(@Valid @PathVariable id: UUID,@RequestBody deletePet:PetDeleteReq): TemplateResponse<PetDeleteRes> {
-        val petToDelete = petService.deletePet(id, deletePet)
+    @PostMapping("/delete")
+    fun deletePet(@Valid @RequestBody deletePet:PetDeleteReq): TemplateResponse<PetDeleteRes> {
+        val petToDelete = petService.deletePet(deletePet)
         return TemplateResponse(
             DELETE_PET_SUCCESS.getCode(),
             DELETE_PET_SUCCESS.getMessage(),

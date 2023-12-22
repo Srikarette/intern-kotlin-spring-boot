@@ -9,10 +9,10 @@ data class PetCreateReq(
     val ownerId: UUID? = null,
 
     @field:NotNull(message = "2:name must not be Null")
-    val name: String?,
+    val name: String? = null,
 
-    val gender: String?,
+    val gender: String? = null,
 
     @field:NotNull(message = "3:type must not be Null")
-    val type: PetTypes?
+    val type: PetTypes? = null
 )
