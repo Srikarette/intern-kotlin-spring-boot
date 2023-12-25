@@ -9,8 +9,8 @@ class AccountGetMapper private constructor(){
             return AccountGetRes(
                 id = account.id,
                 userName = account.userName,
-                firstName = account.firstName,
-                lastName = account.lastName,
+                firstName = account.firstName!!,
+                lastName = account.lastName!!,
                 password = account.password,
                 gender = account.gender,
                 phoneNumber = account.phoneNumber,

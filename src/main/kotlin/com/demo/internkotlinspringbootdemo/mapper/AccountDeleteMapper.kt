@@ -8,8 +8,8 @@ class AccountDeleteMapper private constructor(){
         fun toAccountDeleteRes(account: Account):AccountDeleteRes{
             return AccountDeleteRes(
                 id = account.id!!,
-                firstName = account.firstName,
-                lastName = account.lastName,
+                firstName = account.firstName!!,
+                lastName = account.lastName!!,
                 gender = account.gender,
                 userName = account.userName
             )

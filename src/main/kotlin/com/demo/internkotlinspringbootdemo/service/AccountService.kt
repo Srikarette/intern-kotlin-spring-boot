@@ -58,12 +58,12 @@ class AccountService(
         val hashedPassword = passwordEncoder.encode(account.password)
 
         val accountCreated = Account(
-            firstName = account.firstName!!,
-            lastName = account.lastName!!,
-            gender = account.gender,
+            firstName = account.firstName,
+            lastName = account.lastName,
+            gender = account.gender!!,
             phoneNumber = account.phoneNumber,
             email = account.email,
-            userName = account.userName,
+            userName = account.userName!!,
             password = hashedPassword,
         )
         return accountRepository.save(accountCreated)

@@ -21,23 +21,23 @@ data class Account(
     val id: UUID? = null,
 
     @Column(name = "first_name")
-    var firstName: String,
+    var firstName: String? = null,
 
     @Column(name = "last_name")
-    var lastName: String,
+    var lastName: String? = null,
 
     @Column(name = "gender")
     @Enumerated(STRING)
     var gender: GenderConstants,
 
     @Column(name = "phone_number")
-    var phoneNumber: String?,
+    var phoneNumber: String? = null,
 
     @Column(name = "email")
-    var email: String?,
+    var email: String? = null,
 
     @Column(name = "username")
-    var userName: String?,
+    var userName: String,
 
     @Column(name = "password")
     var password: String

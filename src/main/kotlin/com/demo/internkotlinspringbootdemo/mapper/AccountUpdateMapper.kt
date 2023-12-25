@@ -7,8 +7,8 @@ class AccountUpdateMapper private constructor() {
     companion object {
         fun toAccountUpdateRes(account: Account): AccountUpdateRes {
             return AccountUpdateRes(
-                firstName = account.firstName,
-                lastName = account.lastName,
+                firstName = account.firstName!!,
+                lastName = account.lastName!!,
                 gender = account.gender,
                 phoneNumber = account.phoneNumber,
                 userName = account.userName,

@@ -8,8 +8,8 @@ class AccountCreateMapper private constructor() {
         fun toAccountCreateRes(account: Account): AccountCreateRes {
             return AccountCreateRes(
                 id = account.id!!,
-                firstName = account.firstName,
-                lastName = account.lastName,
+                firstName = account.firstName!!,
+                lastName = account.lastName!!,
                 gender = account.gender,
                 userName = account.userName,
                 password = account.password

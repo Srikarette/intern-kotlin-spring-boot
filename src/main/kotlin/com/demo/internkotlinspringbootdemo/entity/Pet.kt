@@ -15,7 +15,7 @@ data class Pet(
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID,
+    val id: UUID? = null,
 
     val ownerId: UUID,
 

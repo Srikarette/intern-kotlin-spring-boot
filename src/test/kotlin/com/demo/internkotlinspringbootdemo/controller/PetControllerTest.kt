@@ -1,6 +1,7 @@
 package com.demo.internkotlinspringbootdemo.controller
 
 import com.demo.internkotlinspringbootdemo.constants.ErrorCode.VALIDATION_ERROR
+import com.demo.internkotlinspringbootdemo.constants.GenderConstants.MALE
 import com.demo.internkotlinspringbootdemo.constants.PetTypes.CAT
 import com.demo.internkotlinspringbootdemo.constants.PetTypes.DOG
 import com.demo.internkotlinspringbootdemo.constants.SuccessCode.CREATE_PET_SUCCESS
@@ -56,7 +57,7 @@ class PetControllerTest(
                     PetCreateReq(
                         ownerId = null,
                         name = "example pet",
-                        gender = "MALE",
+                        gender = MALE.name,
                         type = CAT
                     ),
                     listOf(
@@ -68,7 +69,7 @@ class PetControllerTest(
                     PetCreateReq(
                         ownerId = UUID.randomUUID(),
                         name = null,
-                        gender = "MALE",
+                        gender = MALE.name,
                         type = CAT
                     ),
                     listOf(
@@ -80,7 +81,7 @@ class PetControllerTest(
                     PetCreateReq(
                         ownerId = UUID.randomUUID(),
                         name = "phuriphon",
-                        gender = "MALE",
+                        gender = MALE.name,
                         type = null
                     ),
                     listOf(
@@ -92,7 +93,7 @@ class PetControllerTest(
                     PetCreateReq(
                         ownerId = null,
                         name = null,
-                        gender = "MALE",
+                        gender = MALE.name,
                         type = null
                     ),
                     listOf(

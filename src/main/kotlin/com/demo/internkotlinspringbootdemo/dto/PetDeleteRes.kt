@@ -5,7 +5,7 @@ import java.util.UUID
 
 data class PetDeleteRes(
     val id: UUID? = null,
-    val ownerId: UUID,
+    val ownerId: UUID? = null,
     val name: String,
     val gender: String?,
     val type: PetTypes?

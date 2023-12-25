@@ -18,7 +18,10 @@ import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
-class PetService(private val petRepository: PetRepository, private val accountRepository: AccountRepository) {
+class PetService(
+    private val petRepository: PetRepository,
+    private val accountRepository: AccountRepository
+) {
 
     private fun validateOwnerIdExists(ownerId: UUID) {
         if (!accountRepository.existsById(ownerId)) {
@@ -40,11 +43,9 @@ class PetService(private val petRepository: PetRepository, private val accountRe
 
     fun createPet(pet: PetCreateReq): Pet {
         validateOwnerIdExists(pet.ownerId!!)
-
         val petCreated = Pet(
-            id = UUID.randomUUID(),
             ownerId = pet.ownerId,
-            name = "Alexandria Hansen",
+            name = pet.name!!,
             gender = pet.gender,
             type = pet.type!!
         )

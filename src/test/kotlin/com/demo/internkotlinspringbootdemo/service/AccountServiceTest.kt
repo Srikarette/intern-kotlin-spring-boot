@@ -1,4 +1,5 @@
 package com.demo.internkotlinspringbootdemo.service
+
 import com.demo.internkotlinspringbootdemo.constants.BusinessException
 import com.demo.internkotlinspringbootdemo.constants.ErrorCode.ACCOUNT_ALREADY_EXISTS
 import com.demo.internkotlinspringbootdemo.constants.ErrorCode.ACCOUNT_NOT_FOUND
@@ -102,18 +103,34 @@ class AccountServiceTest {
         @Test
         fun `Given valid request When getAllAccounts Then all accounts are returned`() {
             // Given
-            val expectedResult = listOf(
-                getAllMockAccount("John", "Doe"),
-                getAllMockAccount("Jane", "Smith"),
-                getAllMockAccount("Bob", "Johnson")
+            val accountId = UUID.randomUUID()
+            val expectedAccount = listOf(
+                Account(
+                    id = accountId,
+                    firstName = "Elton Norris",
+                    lastName = "Ned Bailey",
+                    gender = OTHERS,
+                    phoneNumber = "0123456",
+                    email = "test@example.com",
+                    userName = "username",
+                    password = "sollicitudin"
+                ),
+                Account(
+                    id = accountId,
+                    firstName = "Elton Norris",
+                    lastName = "Ned Bailey",
+                    gender = OTHERS,
+                    phoneNumber = "0123456",
+                    email = "test@example.com",
+                    userName = "username",
+                    password = "sollicitudin"
+                )
             )
-            every { accountRepository.findAll() } returns expectedResult
-
+            every { accountRepository.findAll() } returns expectedAccount
             // When
             val actualResult = accountService.getAllAccounts()
-
             // Then
-            assertEquals(expectedResult, actualResult)
+            assertEquals(expectedAccount, actualResult)
             verify(exactly = 1) { accountRepository.findAll() }
         }
 
@@ -461,25 +478,12 @@ class AccountServiceTest {
         }
     }
 
-    private fun getAllMockAccount(firstName: String, lastName: String): Account {
-        return Account(
-            id = UUID.randomUUID(),
-            firstName = firstName,
-            lastName = lastName,
-            gender = MALE,
-            phoneNumber = "1234567890",
-            email = "test@example.com",
-            userName = "testUser",
-            password = "password"
-        )
-    }
     private fun createMockAccountProjections(): List<AccountProjection> {
         val userId1 = UUID.randomUUID()
         val userId2 = UUID.randomUUID()
 
         return listOf(
-            createMockAccountProjection(userId1, "John Doe", 2),
-            createMockAccountProjection(userId2, "Jane Smith", 3)
+
         )
     }
 
