@@ -13,6 +13,9 @@ import com.demo.internkotlinspringbootdemo.mapper.AccountDeleteMapper
 import com.demo.internkotlinspringbootdemo.mapper.AccountUpdateMapper
 import com.demo.internkotlinspringbootdemo.repository.AccountProjection
 import com.demo.internkotlinspringbootdemo.repository.AccountRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -24,6 +27,11 @@ class AccountService(
 ) {
     fun getAllAccounts(): List<Account> {
         return accountRepository.findAll()
+    }
+
+    fun getAllAccountsByFirstname(pageNumber: Int, pageSize: Int): Page<Account> {
+        val pageable: Pageable = PageRequest.of(pageNumber, pageSize)
+        return accountRepository.findAllByOrderByFirstNameAsc(pageable)
     }
 
     fun getAccountPetCount(): List<AccountProjection> {

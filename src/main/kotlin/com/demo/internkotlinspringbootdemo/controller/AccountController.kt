@@ -13,18 +13,23 @@ import com.demo.internkotlinspringbootdemo.dto.AccountGetRes
 import com.demo.internkotlinspringbootdemo.dto.AccountProjectionRes
 import com.demo.internkotlinspringbootdemo.dto.AccountUpdateReq
 import com.demo.internkotlinspringbootdemo.dto.AccountUpdateRes
+import com.demo.internkotlinspringbootdemo.dto.PaginationTemplateResponse
 import com.demo.internkotlinspringbootdemo.dto.TemplateResponse
+import com.demo.internkotlinspringbootdemo.entity.PageData
 import com.demo.internkotlinspringbootdemo.mapper.AccountCreateMapper
+import com.demo.internkotlinspringbootdemo.mapper.AccountGetAllByFirstNameMapper
 import com.demo.internkotlinspringbootdemo.mapper.AccountGetAllMapper
 import com.demo.internkotlinspringbootdemo.mapper.AccountGetMapper
 import com.demo.internkotlinspringbootdemo.mapper.AccountProjectionGetByIdMapper
 import com.demo.internkotlinspringbootdemo.mapper.AccountProjectionMapper
 import com.demo.internkotlinspringbootdemo.service.AccountService
 import jakarta.validation.Valid
+import org.springframework.data.domain.Page
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
@@ -40,6 +45,24 @@ class AccountController(private val accountService: AccountService) {
             GET_ALL_ACCOUNT_SUCCESS.getCode(),
             GET_ALL_ACCOUNT_SUCCESS.getMessage(),
             accountsDetails
+        )
+    }
+    @PostMapping("/accounts")
+    fun getAllAccountsByFirstName(
+        @RequestParam(defaultValue = "3") pageNumber: Int,
+        @RequestParam(defaultValue = "5") pageSize: Int
+    ): PaginationTemplateResponse<Page<AccountGetAllRes>> {
+        val accounts = accountService.getAllAccountsByFirstname(pageNumber, pageSize)
+        val accountsDetails = AccountGetAllByFirstNameMapper.toAccountGetAllRes(accounts)
+        val pageMetadata = PageData(
+            currentPage = accounts.number,
+            totalPages = accounts.totalPages
+        )
+        return PaginationTemplateResponse(
+            GET_ALL_ACCOUNT_SUCCESS.getCode(),
+            GET_ALL_ACCOUNT_SUCCESS.getMessage(),
+            pageMetadata,
+            accountsDetails,
         )
     }
 

@@ -1,6 +1,8 @@
 package com.demo.internkotlinspringbootdemo.repository
 
 import com.demo.internkotlinspringbootdemo.entity.Account
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
@@ -39,6 +41,7 @@ interface AccountRepository : JpaRepository<Account, UUID> {
     """, nativeQuery = true)
     fun getUserPetCountsById(ownerId: UUID): AccountProjection
 
+    fun findAllByOrderByFirstNameAsc(pageable: Pageable): Page<Account>
     fun existsByEmail(name: String): Boolean
 
 }
