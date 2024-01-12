@@ -12,6 +12,8 @@ import com.demo.internkotlinspringbootdemo.dto.PetCreateReq
 import com.demo.internkotlinspringbootdemo.dto.PetDeleteReq
 import com.demo.internkotlinspringbootdemo.dto.PetDeleteRes
 import com.demo.internkotlinspringbootdemo.dto.PetGetReq
+import com.demo.internkotlinspringbootdemo.dto.PetUpdateReq
+import com.demo.internkotlinspringbootdemo.dto.PetUpdateRes
 import com.demo.internkotlinspringbootdemo.entity.Pet
 import com.demo.internkotlinspringbootdemo.repository.AccountRepository
 import com.demo.internkotlinspringbootdemo.repository.PetRepository
@@ -257,6 +259,95 @@ class PetServiceTest {
             assertEquals(expectedResult, actualResult)
 
             verify(exactly = 1) { petRepository.save(petDataDetail) }
+            verify (exactly = 1) { accountRepository.existsById(ownerId)}
+        }
+    }
+
+    @Nested
+    @DisplayName("UpdatePet")
+    inner class UpdatePetTest() {
+        private val petId = UUID.randomUUID()
+        private val ownerId = UUID.randomUUID()
+        @Test
+        fun `Given valid update request when updatePet then account is updated`() {
+            // Given
+            val expectedResult = PetUpdateRes(
+                id = petId,
+                ownerId = ownerId,
+                name = "Numbers Franks",
+                gender = MALE.name,
+                type = CAT
+            )
+
+            val petData = Pet(
+                id = petId,
+                ownerId = ownerId,
+                name = "Numbers Franks",
+                gender = MALE.name,
+                type = CAT
+            )
+
+            val request = PetUpdateReq(
+                id = petId,
+                ownerId = ownerId,
+                name = "Numbers Franks",
+                gender = MALE.name,
+                type = CAT
+            )
+            every { petRepository.findById(petId) } returns Optional.of(petData)
+            every { petRepository.save(petData) } returns petData
+            every { accountRepository.existsById(ownerId) } returns true
+            // When
+            val actualResult = petService.updatePet(request)
+
+            // Then
+            assertEquals(expectedResult, actualResult)
+
+            verify(exactly = 1) { petRepository.findById(petId) }
+            verify(exactly = 1) { petRepository.save(petData) }
+            verify (exactly = 1) { accountRepository.existsById(ownerId)}
+        }
+
+        @Test
+        fun `Given invalid PetID when updatePet then BusinessException is thrown`() {
+            // Given
+            val expectedResult = PetUpdateRes(
+                id = petId,
+                ownerId = ownerId,
+                name = "Numbers Franks",
+                gender = MALE.name,
+                type = CAT
+            )
+
+            val petData = Pet(
+                id = petId,
+                ownerId = ownerId,
+                name = "Numbers Franks",
+                gender = MALE.name,
+                type = CAT
+            )
+
+            val request = PetUpdateReq(
+                id = petId,
+                ownerId = ownerId,
+                name = "Numbers Franks",
+                gender = MALE.name,
+                type = CAT
+            )
+            val expectedException = BusinessException(PET_NOT_FOUND.getCode(), PET_NOT_FOUND.getMessage())
+
+            every { accountRepository.existsById(ownerId) } returns true
+            every { petRepository.findById(petId) } returns Optional.empty()
+
+            // When-Then
+            val exception = assertThrows(BusinessException::class.java) {
+                petService.updatePet(request)
+            }
+
+            assertEquals(expectedException, exception)
+
+            verify(exactly = 1) { petRepository.findById(petId) }
+            verify(exactly = 0 ) { petRepository.save(petData) }
             verify (exactly = 1) { accountRepository.existsById(ownerId)}
         }
     }

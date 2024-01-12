@@ -41,4 +41,5 @@ data class Account(
 
     @Column(name = "password")
     var password: String
+
 )

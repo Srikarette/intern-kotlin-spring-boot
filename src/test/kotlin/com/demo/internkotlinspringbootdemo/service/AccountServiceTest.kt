@@ -15,10 +15,10 @@ import com.demo.internkotlinspringbootdemo.dto.AccountUpdateRes
 import com.demo.internkotlinspringbootdemo.entity.Account
 import com.demo.internkotlinspringbootdemo.repository.AccountProjection
 import com.demo.internkotlinspringbootdemo.repository.AccountRepository
-import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -67,7 +67,7 @@ class AccountServiceTest {
             )
 
             every { accountRepository.findById(request.id) } returns Optional.of(deleteData)
-            every { accountRepository.deleteById(request.id) } just Runs
+            every { accountRepository.deleteById(request.id) } just runs
 
             // When
             val actualResult = accountService.deleteAccount(accountId)

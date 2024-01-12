@@ -1,21 +1,22 @@
 package com.demo.internkotlinspringbootdemo.controller
 
-import com.demo.internkotlinspringbootdemo.constants.SuccessCode
 import com.demo.internkotlinspringbootdemo.constants.SuccessCode.CREATE_ACCOUNT_SUCCESS
 import com.demo.internkotlinspringbootdemo.constants.SuccessCode.DELETE_ACCOUNT_SUCCESS
 import com.demo.internkotlinspringbootdemo.constants.SuccessCode.GET_ACCOUNT_SUCCESS
 import com.demo.internkotlinspringbootdemo.constants.SuccessCode.GET_ALL_ACCOUNT_SUCCESS
+import com.demo.internkotlinspringbootdemo.constants.SuccessCode.UPDATE_ACCOUNT_SUCCESS
 import com.demo.internkotlinspringbootdemo.dto.AccountCreateReq
 import com.demo.internkotlinspringbootdemo.dto.AccountCreateRes
 import com.demo.internkotlinspringbootdemo.dto.AccountDeleteRes
 import com.demo.internkotlinspringbootdemo.dto.AccountGetAllRes
+import com.demo.internkotlinspringbootdemo.dto.AccountGetPageReq
 import com.demo.internkotlinspringbootdemo.dto.AccountGetRes
 import com.demo.internkotlinspringbootdemo.dto.AccountProjectionRes
 import com.demo.internkotlinspringbootdemo.dto.AccountUpdateReq
 import com.demo.internkotlinspringbootdemo.dto.AccountUpdateRes
 import com.demo.internkotlinspringbootdemo.dto.PaginationTemplateResponse
 import com.demo.internkotlinspringbootdemo.dto.TemplateResponse
-import com.demo.internkotlinspringbootdemo.entity.PageData
+import com.demo.internkotlinspringbootdemo.entity.Page
 import com.demo.internkotlinspringbootdemo.mapper.AccountCreateMapper
 import com.demo.internkotlinspringbootdemo.mapper.AccountGetAllByFirstNameMapper
 import com.demo.internkotlinspringbootdemo.mapper.AccountGetAllMapper
@@ -24,7 +25,6 @@ import com.demo.internkotlinspringbootdemo.mapper.AccountProjectionGetByIdMapper
 import com.demo.internkotlinspringbootdemo.mapper.AccountProjectionMapper
 import com.demo.internkotlinspringbootdemo.service.AccountService
 import jakarta.validation.Valid
-import org.springframework.data.domain.Page
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -47,14 +47,16 @@ class AccountController(private val accountService: AccountService) {
             accountsDetails
         )
     }
+
     @PostMapping("/accounts")
     fun getAllAccountsByFirstName(
-        @RequestParam(defaultValue = "3") pageNumber: Int,
+        @Valid
+        @RequestBody currentPage: AccountGetPageReq,
         @RequestParam(defaultValue = "5") pageSize: Int
-    ): PaginationTemplateResponse<Page<AccountGetAllRes>> {
-        val accounts = accountService.getAllAccountsByFirstname(pageNumber, pageSize)
+    ): PaginationTemplateResponse {
+        val accounts = accountService.getAllAccountsByFirstname(currentPage.currentPage, pageSize)
         val accountsDetails = AccountGetAllByFirstNameMapper.toAccountGetAllRes(accounts)
-        val pageMetadata = PageData(
+        val pageMetadata = Page(
             currentPage = accounts.number,
             totalPages = accounts.totalPages
         )
@@ -62,9 +64,10 @@ class AccountController(private val accountService: AccountService) {
             GET_ALL_ACCOUNT_SUCCESS.getCode(),
             GET_ALL_ACCOUNT_SUCCESS.getMessage(),
             pageMetadata,
-            accountsDetails,
+            accountsDetails
         )
     }
+
 
     @PostMapping("/count")
     fun getAccountPetCount(): TemplateResponse<List<AccountProjectionRes>> {
@@ -117,8 +120,8 @@ class AccountController(private val accountService: AccountService) {
     ): TemplateResponse<AccountUpdateRes> {
         val accountToUpdate = accountService.updateAccount(id, updatedAccount)
         return TemplateResponse(
-            SuccessCode.UPDATE_ACCOUNT_SUCCESS.getCode(),
-            SuccessCode.UPDATE_ACCOUNT_SUCCESS.getMessage(),
+            UPDATE_ACCOUNT_SUCCESS.getCode(),
+            UPDATE_ACCOUNT_SUCCESS.getMessage(),
             accountToUpdate
         )
     }

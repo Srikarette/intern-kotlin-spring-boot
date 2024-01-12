@@ -1,6 +1,5 @@
 package com.demo.internkotlinspringbootdemo.entity
-
-data class PageData(
+data class Page(
     val currentPage: Int,
     val totalPages: Int
 )

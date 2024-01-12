@@ -29,7 +29,10 @@ class AccountService(
         return accountRepository.findAll()
     }
 
-    fun getAllAccountsByFirstname(pageNumber: Int, pageSize: Int): Page<Account> {
+    fun getAllAccountsByFirstname(
+        pageNumber: Int,
+        pageSize: Int
+    ): Page<Account> {
         val pageable: Pageable = PageRequest.of(pageNumber, pageSize)
         return accountRepository.findAllByOrderByFirstNameAsc(pageable)
     }
@@ -45,7 +48,6 @@ class AccountService(
         }
         return accountRepository.getUserPetCountsById(id)
     }
-
 
     fun getAccountById(id: UUID): Account {
         val existingAccount = accountRepository.findById(id)
@@ -78,7 +80,7 @@ class AccountService(
     }
 
     fun updateAccount(id: UUID, updatedAccount: AccountUpdateReq): AccountUpdateRes {
-         val existingAccount = accountRepository.findById(id)
+        val existingAccount = accountRepository.findById(id)
 
         if (existingAccount.isEmpty) {
             throw BusinessException(ACCOUNT_NOT_FOUND.getCode(), ACCOUNT_NOT_FOUND.getMessage())
@@ -93,17 +95,18 @@ class AccountService(
 
         val updatedEntity = accountData
         updatedEntity.apply {
-            firstName = updatedAccount.firstName?:firstName
-            lastName = updatedAccount.lastName?:lastName
-            gender = updatedAccount.gender?:gender
-            phoneNumber = updatedAccount.phoneNumber?:phoneNumber
-            email = updatedAccount.email?:email
+            firstName = updatedAccount.firstName ?: firstName
+            lastName = updatedAccount.lastName ?: lastName
+            gender = updatedAccount.gender ?: gender
+            phoneNumber = updatedAccount.phoneNumber ?: phoneNumber
+            email = updatedAccount.email ?: email
             userName = updatedAccount.userName
             password = accountData.password
         }
         val updatedAccountDetail = accountRepository.save(updatedEntity)
         return AccountUpdateMapper.toAccountUpdateRes(updatedAccountDetail)
     }
+
     fun deleteAccount(id: UUID): AccountDeleteRes {
         val existingAccount = accountRepository.findById(id)
 

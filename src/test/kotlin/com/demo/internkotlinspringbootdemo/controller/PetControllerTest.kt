@@ -217,7 +217,7 @@ class PetControllerTest(
                         ownerId = UUID.randomUUID(),
                     ),
                     listOf(
-                        "petId must not be Null"
+                        "petId must not be Null",
                     )
                 ),
                 Arguments.of(
@@ -241,7 +241,6 @@ class PetControllerTest(
                         "ownerId must not be Null",
                     )
                 )
-
             )
         }
     }
@@ -300,6 +299,7 @@ class PetControllerTest(
                 gender = "FEMALE",
                 type = DOG
             )
+
             val expectException =
                 TemplateResponse(CREATE_PET_SUCCESS.getCode(), CREATE_PET_SUCCESS.getMessage(), expectedPet)
 

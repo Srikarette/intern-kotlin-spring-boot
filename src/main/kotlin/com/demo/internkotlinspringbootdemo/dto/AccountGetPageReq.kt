@@ -1,6 +1,5 @@
 package com.demo.internkotlinspringbootdemo.dto
 
-data class AccountGetAllReq(
+data class AccountGetPageReq(
     val currentPage: Int
-)
-
+) 

@@ -1,11 +1,10 @@
 package com.demo.internkotlinspringbootdemo.dto
 
-import com.demo.internkotlinspringbootdemo.entity.PageData
+import com.demo.internkotlinspringbootdemo.entity.Page
 
-data class PaginationTemplateResponse<Any>(
+data class PaginationTemplateResponse(
     val code: Int,
     val message: String,
-    val pageData: PageData,
+    val pagedata: Page,
     val data: Any? = null,
-
 )

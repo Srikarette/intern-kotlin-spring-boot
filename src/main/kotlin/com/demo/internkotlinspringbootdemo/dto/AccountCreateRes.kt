@@ -11,5 +11,6 @@ data class AccountCreateRes(
     var phoneNumber: String? = null,
     var email: String? = null,
     var userName: String,
-    var password: String
-)
+    var password: String,
+){
+}
